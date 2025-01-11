@@ -43,6 +43,9 @@ class LoanSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     loans = LoanSerializer(many=True, read_only=True)
+    password = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    password2 = serializers.CharField(write_only=True, required=False, allow_blank=True, label="Confirm Password")
+    
 
     class Meta:
         model = User
@@ -52,15 +55,42 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "username",
             "password",
+            "password2",
             "email",
             "loans",
         ]
-        extra_kwargs = {"password": {"write_only": True, "required": True}}
+        extra_kwargs = {"password": {"write_only": True, "required": False}}
 
     def create(self, validated_data):
-        print(validated_data)
-        user = User.objects.create_user(**validated_data)
+        password = validated_data.pop("password", None)
+        password2 = validated_data.pop("password2", None)
+        user = User(**validated_data)
+        if password:
+            user.set_password(password)
+        user.save()
         return user
+
+    def update(self, instance, validated_data):
+        validated_data.pop("password2", None)
+        password = validated_data.pop("password", None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+
+    def validate(self, attrs):
+        password = attrs.get("password")
+        password2 = attrs.get("password2")
+
+        if password or password2:
+            if password != password2:
+                raise serializers.ValidationError({"password": "Passwords must match."})
+        return attrs
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

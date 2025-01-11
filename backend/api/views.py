@@ -6,6 +6,7 @@ from .models import User, Book, BookCategory
 from .serializers import UserSerializer, BookSerializer, CategorySerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import BookFilter
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # Create your views here.
 
@@ -15,21 +16,13 @@ class CreateUserView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 
-class UserDetail(APIView):
+class UserDetail(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
-    def get(self, request):
-        serializer = UserSerializer(request.user, context={"request": request})
-        return Response(serializer.data)
-
-    def put(self, request):
-        serializer = UserSerializer(
-            request.user, data=request.data, context={"request": request}
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+    def get_object(self):
+        return self.request.user
 
 
 class BookDetails(generics.RetrieveAPIView):

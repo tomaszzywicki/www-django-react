@@ -14,7 +14,7 @@ const FilterBar = ({ categories, selectedCategories, onCategoryChange }) => {
 
     if (value === "All") {
       if (checked) {
-        updatedCategories = []; // Select All: clear selections
+        updatedCategories = [];
       }
     } else {
       const categoryId = parseInt(value, 10);
@@ -25,7 +25,7 @@ const FilterBar = ({ categories, selectedCategories, onCategoryChange }) => {
       }
     }
 
-    onCategoryChange(updatedCategories); // Notify Home component
+    onCategoryChange(updatedCategories);
   };
 
   const toggleDropdown = () => {

@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import api from "../api";
 import Navbar from "../components/Navbar";
 import BookMini from "../components/BookMini";
+import { useNavigate } from "react-router-dom";
 
 import "../styles/Account.css";
 
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -53,7 +55,7 @@ const Account = () => {
           <button
             className="button"
             onClick={() => {
-              /* Implement Edit Details functionality */
+              navigate("/change-user-data");
             }}
           >
             Edit Details
@@ -61,7 +63,7 @@ const Account = () => {
           <button
             className="button"
             onClick={() => {
-              /* Implement Change Password functionality */
+              navigate("/change-user-password");
             }}
           >
             Change Password
