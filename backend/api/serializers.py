@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book, BookCopy, Loan, Note, User, BookCategory
+from .models import Book, BookCopy, Loan, User, BookCategory
 
 # Konwertuje modele Django na JSON i na odwrót
 
