@@ -1,15 +1,7 @@
 from rest_framework import serializers
-from .models import Book, BookCopy, Loan, Note, User
+from .models import Book, BookCopy, Loan, Note, User, BookCategory
 
 # Konwertuje modele Django na JSON i na odwrót
-
-
-class NoteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Note
-        fields = ["id", "title", "content", "created_at", "author"]
-        extra_kwargs = {"author": {"read_only": True}}
-
 
 class BookSerializer(serializers.ModelSerializer):
     cover_image = serializers.SerializerMethodField()
@@ -69,3 +61,8 @@ class UserSerializer(serializers.ModelSerializer):
         print(validated_data)
         user = User.objects.create_user(**validated_data)
         return user
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookCategory
+        fields = ['id', 'name']
