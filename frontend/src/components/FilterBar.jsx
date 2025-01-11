@@ -1,25 +1,31 @@
+/* eslint-disable react/prop-types */
 import { useRef, useState, useEffect } from "react";
 
 import "../styles/FilterBar.css";
 
 // eslint-disable-next-line react/prop-types
-const FilterBar = () => {
-  const [selectedCategories, setSelectedCategories] = useState([]);
+const FilterBar = ({ categories, selectedCategories, onCategoryChange }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const categories = ["Fiction", "Non-Fiction", "Science", "History"];
-  // tutaj zrobić potem branie kategorii z API
-
   const handleCategoryChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      setSelectedCategories((prev) => [...prev, value]);
+    let updatedCategories = [...selectedCategories];
+
+    if (value === "All") {
+      if (checked) {
+        updatedCategories = []; // Select All: clear selections
+      }
     } else {
-      setSelectedCategories((prev) =>
-        prev.filter((category) => category !== value)
-      );
+      const categoryId = parseInt(value, 10);
+      if (checked) {
+        updatedCategories.push(categoryId);
+      } else {
+        updatedCategories = updatedCategories.filter((id) => id !== categoryId);
+      }
     }
+
+    onCategoryChange(updatedCategories); // Notify Home component
   };
 
   const toggleDropdown = () => {
@@ -44,7 +50,12 @@ const FilterBar = () => {
   }, [isDropdownOpen]);
 
   const displayText =
-    selectedCategories.length === 0 ? "All" : selectedCategories.join(", ");
+    selectedCategories.length === 0
+      ? "All"
+      : categories
+          .filter((cat) => selectedCategories.includes(cat.id))
+          .map((cat) => cat.name)
+          .join(", ");
 
   return (
     <div className="filter-bar">
@@ -59,32 +70,40 @@ const FilterBar = () => {
         <option value="Ascending">Ascending</option>
         <option value="Descending">Descending</option>
       </select>
+
       <span>Category</span>
       <div className="multi-select" ref={dropdownRef}>
-        <div className="select-box" onClick={toggleDropdown}>
-          <span className="selected-text">{displayText}</span>
+        <div
+          className="select-box"
+          onClick={toggleDropdown}
+          aria-haspopup="listbox"
+          aria-expanded={isDropdownOpen}
+        >
+          <span className="selected-text" title={displayText}>
+            {displayText}
+          </span>
           <span className="arrow">{isDropdownOpen ? "▲" : "▼"}</span>
         </div>
         {isDropdownOpen && (
-          <div className="options-container">
+          <div className="options-container" role="listbox">
             <label className="option">
               <input
                 type="checkbox"
                 value="All"
                 checked={selectedCategories.length === 0}
-                onChange={() => setSelectedCategories([])}
+                onChange={handleCategoryChange}
               />
               All
             </label>
             {categories.map((category) => (
-              <label key={category} className="option">
+              <label key={category.id} className="option">
                 <input
                   type="checkbox"
-                  value={category}
-                  checked={selectedCategories.includes(category)}
+                  value={category.id}
+                  checked={selectedCategories.includes(category.id)}
                   onChange={handleCategoryChange}
                 />
-                {category}
+                {category.name}
               </label>
             ))}
           </div>

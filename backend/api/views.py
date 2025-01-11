@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import User, Book, BookCategory
 from .serializers import UserSerializer, BookSerializer, CategorySerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from .filters import BookFilter
 
 # Create your views here.
 
@@ -41,7 +42,7 @@ class BooksList(generics.ListAPIView):
     serializer_class = BookSerializer
     permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category']
+    filterset_class = BookFilter
 
 class CategoryList(generics.ListAPIView):
     queryset = BookCategory.objects.all()

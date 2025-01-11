@@ -45,19 +45,21 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Montserrat", sans-serif;
 }
 
 .select-box:hover {
-  border-color: #999;
+  border-color: #888;
 }
 
 .selected-text {
   flex: 1;
   margin-right: 10px;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 500;
 }
 
 .arrow {
@@ -85,6 +87,7 @@
   align-items: center;
   padding: 8px 12px;
   cursor: pointer;
+  font-family: "Montserrat", sans-serif;
 }
 
 .option:hover {
