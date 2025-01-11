@@ -47,8 +47,22 @@ class UserDetail(APIView):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(serializer.data)
 
+    def put(self, request):
+        serializer = UserSerializer(
+            request.user, data=request.data, context={"request": request}
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
 
 class BookDetails(generics.RetrieveAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [AllowAny]
+
+class BooksList(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [AllowAny]

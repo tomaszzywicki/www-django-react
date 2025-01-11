@@ -1,0 +1,23 @@
+.home {
+  margin: auto 150px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-bar {
+  margin-top: 30px;
+}
+
+.books-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-items: center;
+  background-color: white;
+  margin-top: 10px;
+}

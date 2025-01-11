@@ -2,14 +2,21 @@ import { useState, useEffect } from "react";
 import api from "../api";
 import Note from "../components/Note";
 import Navbar from "../components/Navbar";
+import SearchBar from "../components/SearchBar";
+import BookMini from "../components/BookMini";
+
+import "../styles/Home.css";
+import FilterBar from "../components/FilterBar";
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
+  const [books, setBooks] = useState([]);
 
   useEffect(() => {
     getNotes();
+    getBooks();
   }, []);
 
   const getNotes = () => {
@@ -23,13 +30,23 @@ const Home = () => {
       .catch((error) => alert(error));
   };
 
+  const getBooks = () => {
+    api
+      .get("/api/books/")
+      .then((res) => res.data)
+      .then((data) => {
+        setBooks(data);
+        console.log(data);
+      });
+  };
+
   const deleteNote = (id) => {
     api
       .delete(`/api/notes/delete/${id}/`)
       .then((res) => {
         if (res.status === 204) {
           console.log("Note deleted successfully");
-          setNotes(notes.filter((note) => note.id !== id));
+          setNotes((prev) => prev.filter((note) => note.id !== id));
           getNotes();
         } else {
           console.log("Error deleting note");
@@ -58,12 +75,20 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <div>
+    <div className="home">
+      <div className="navbar-container">
         <Navbar />
       </div>
-      <div>
-        <h2>Library page (not yet)</h2>
+      <div className="search-bar">
+        <SearchBar placeholder="Enter book title" />
+      </div>
+      <div className="filter-bar">
+        <FilterBar />
+      </div>
+      <div className="books-container">
+        {books.map((book) => (
+          <BookMini key={book.id} title={book.title} cover={book.cover_image} />
+        ))}
       </div>
       <h2>Create a note</h2>
       <form onSubmit={createNote}>
