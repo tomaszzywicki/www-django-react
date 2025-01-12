@@ -26,3 +26,15 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 50px;
+  }
+}

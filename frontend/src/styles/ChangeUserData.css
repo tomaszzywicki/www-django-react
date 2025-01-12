@@ -46,6 +46,7 @@
   margin-bottom: 8px;
   color: #555555;
   font-weight: bold;
+  font-size: 16px;
 }
 
 .form-input {
@@ -77,11 +78,19 @@
   background-color: #0056b3;
 }
 
-/* Responsywność */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .change-user-data-container {
-    margin: 20px;
+    margin: 20px auto;
+    max-width: 400px;
     padding: 20px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .form-group label {
+    font-size: 14px;
   }
 
   .form-input {
@@ -92,5 +101,27 @@
   .submit-button {
     font-size: 14px;
     padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .change-user-data-container {
+    margin: 10px auto;
+    padding: 10px;
+    max-width: 300px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-input {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .submit-button {
+    font-size: 12px;
+    padding: 8px;
   }
 }

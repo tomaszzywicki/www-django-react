@@ -21,3 +21,41 @@
   background-color: white;
   margin-top: 10px;
 }
+
+@media (max-width: 1200px) {
+  .home {
+    margin: auto 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home {
+    margin: auto 40px;
+  }
+
+  .filter-bar {
+    margin-top: 20px;
+  }
+
+  .books-container {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home {
+    margin: auto 20px;
+  }
+
+  .filter-bar {
+    margin-top: 15px;
+  }
+
+  .books-container {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    padding: 12px;
+  }
+}

@@ -34,8 +34,9 @@
   object-fit: cover;
 }
 
-.book-mini h2 {
+div.book-mini h2 {
   font-size: 1.2rem;
+  /* padding: 0 10px; */
   margin-top: 0;
   color: #333;
   flex-grow: 1;
@@ -76,19 +77,44 @@
   transform: scale(1.2);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .book-mini {
-    max-width: 150px;
-    padding: 12px;
-    height: 300px;
+    max-width: 200px;
+    padding: 16px;
+    height: 350px;
   }
 
   .book-mini img {
-    max-width: 120px;
+    max-width: 150px;
+  }
+
+  div.book-mini h2 {
+    font-size: 1rem;
   }
 
   .details-button {
-    padding: 8px 16px;
+    padding: 9px 18px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-mini {
+    max-width: 120px;
+    padding: 8px;
+    height: 250px;
+  }
+
+  .book-mini img {
+    max-width: 100px;
+  }
+
+  div.book-mini h2 {
     font-size: 0.8rem;
+  }
+
+  .details-button {
+    padding: 7px 12px;
+    font-size: 0.6rem;
   }
 }

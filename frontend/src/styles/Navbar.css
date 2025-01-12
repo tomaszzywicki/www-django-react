@@ -40,6 +40,7 @@
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.3s ease;
+  padding: 10px 15px;
 }
 
 .navbar-link:hover {
@@ -47,38 +48,26 @@
 }
 
 @media (max-width: 768px) {
-  .navbar-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .navbar-menu {
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
-  }
-
-  .navbar-item {
-    width: 100%;
+  .navbar-logo {
+    font-size: 1.4rem;
   }
 
   .navbar-link {
-    display: block;
-    width: 100%;
-    padding: 10px 0;
+    padding: 10px 5px;
   }
 }
 
 @media (max-width: 480px) {
   .navbar {
-    padding: 10px 15px;
+    padding: 12px 15px;
   }
 
   .navbar-logo {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .navbar-link {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    padding: 10px 0px;
   }
 }
