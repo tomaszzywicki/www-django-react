@@ -5,6 +5,7 @@ from .models import Book, BookCopy, Loan, User, BookCategory
 
 class BookSerializer(serializers.ModelSerializer):
     cover_image = serializers.SerializerMethodField()
+    category = serializers.SlugRelatedField(slug_field="name", read_only=True)
 
     class Meta:
         model = Book

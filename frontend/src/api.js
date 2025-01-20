@@ -8,8 +8,17 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(ACCESS_TOKEN);
-    if (token) {
+
+    const publicEndpoints = ["/books", "/categories"];
+
+    const isPublicEndpoint = publicEndpoints.some((url) =>
+      config.url.startsWith(url)
+    );
+
+    if (token && !isPublicEndpoint) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      delete config.headers.Authorization;
     }
     return config;
   },

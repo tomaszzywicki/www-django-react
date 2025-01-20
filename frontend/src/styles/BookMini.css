@@ -20,7 +20,6 @@
 }
 
 .book-mini:hover {
-  /* transform: translateY(-10px) scale(1.02); */
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
   background-color: #f9f9f9;
 }
@@ -28,7 +27,8 @@
 .book-mini img {
   width: 100%;
   max-width: 150px;
-  height: auto;
+  width: 150px;
+  height: 250px;
   border-radius: 8px;
   margin-bottom: 12px;
   object-fit: cover;
@@ -36,7 +36,6 @@
 
 div.book-mini h2 {
   font-size: 1.2rem;
-  /* padding: 0 10px; */
   margin-top: 0;
   color: #333;
   flex-grow: 1;
@@ -44,6 +43,11 @@ div.book-mini h2 {
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: #f3f3f3;
 }
 
 .details-button {

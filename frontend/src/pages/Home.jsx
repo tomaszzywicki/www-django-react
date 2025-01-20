@@ -82,6 +82,7 @@ const Home = () => {
               key={book.id}
               title={book.title}
               cover={book.cover_image}
+              id={book.id}
             />
           ))
         ) : (

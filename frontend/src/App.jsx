@@ -6,10 +6,13 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Account from "./pages/Account";
 import Navbar from "./components/Navbar";
+import Book from "./components/Book";
+import Footer from "./components/Footer";
 
-import "./styles/Main.css";
 import ChangeUserData from "./pages/ChangeUserData";
 import ChangeUserPassword from "./pages/ChangeUserPassword";
+
+import "./styles/Main.css";
 
 const Logout = () => {
   localStorage.clear();
@@ -52,11 +55,13 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/book/:id" element={<Book />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/register" element={<RegisterAndLogout />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </div>
     </BrowserRouter>
   );
