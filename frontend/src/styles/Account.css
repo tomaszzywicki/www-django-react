@@ -60,11 +60,21 @@
   transform: translateY(0);
 }
 
+.orders-section {
+  background-color: #fff;
+}
+
 .orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   margin-top: 20px;
+}
+
+.orders-title {
+  padding-left: 20px;
+  padding-top: 20px;
+  font-size: 1.5rem;
 }
 
 .order-item {

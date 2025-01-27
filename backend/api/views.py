@@ -91,3 +91,17 @@ class UserOrdersView(APIView):
         orders = Order.objects.filter(user=request.user)
         serializer = OrderSerializer(orders, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+class CancelOrderView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, order_id):
+        try:
+            order = Order.objects.get(id=order_id, user=request.user)
+            order.book.available_copies += 1
+            order.book.save()
+            order.delete()
+            return Response({'status': 'success'})
+        except Order.DoesNotExist:
+            return Response({'error': 'Order not found'}, status=404)

@@ -11,5 +11,6 @@ urlpatterns = [
     path("book/<int:book_id>/comments/", views.CommentListCreateAPIView.as_view(), name="comment-list-create"),
     path("comments/<int:pk>/", views.CommentDeleteAPIView.as_view(), name="comment-delete"),
     path('book/<int:book_id>/order/', views.OrderCreateView.as_view(), name='order-book'),
-    path('user/orders/', views.UserOrdersView.as_view(), name='user-orders')
+    path('user/orders/', views.UserOrdersView.as_view(), name='user-orders'),
+    path('orders/<int:order_id>/cancel/', views.CancelOrderView.as_view(), name='cancel-order')
 ]

@@ -2,7 +2,7 @@ import { ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 import api from "../api";
 import Navbar from "../components/Navbar";
-import BookMini from "../components/BookMini";
+import OrderMini from "../components/OrderMini";
 import { useNavigate } from "react-router-dom";
 
 import "../styles/Account.css";
@@ -34,6 +34,10 @@ const Account = () => {
     };
     fetchUserData();
   }, [navigate]);
+
+  const handleOrderCancel = (orderId) => {
+    setOrders(orders.filter((order) => order.id !== orderId));
+  };
 
   if (loading) {
     return <div>Loading user data...</div>;
@@ -73,19 +77,18 @@ const Account = () => {
       </div>
 
       <div className="orders-section">
-        <h3>My Orders</h3>
+        <h3 className="orders-title">My Orders</h3>
         <div className="orders-grid">
           {orders.length > 0 ? (
             orders.map((order) => (
-              <div key={order.id} className="order-item">
-                {order.book && (
-                  <BookMini
-                    title={order.book.title}
-                    cover={order.book.cover_image}
-                    id={order.book.id}
-                  />
-                )}
-              </div>
+              <OrderMini
+                key={order.id}
+                orderId={order.id}
+                book={order.book}
+                orderDate={order.order_date}
+                status={order.status}
+                onCancelSuccess={handleOrderCancel}
+              />
             ))
           ) : (
             <p>No orders found</p>
