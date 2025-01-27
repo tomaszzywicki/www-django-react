@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import api from "../api";
 
 import "../styles/Book.css";
+import CommentsSection from "./CommentsSection";
 
 const Book = () => {
   const { id } = useParams();
@@ -33,6 +34,7 @@ const Book = () => {
         <p className="book-description">{book.description}</p>
         <p className="book-category">Kategoria: {book.category}</p>
       </div>
+      <CommentsSection bookId={id} />
     </div>
   );
 };

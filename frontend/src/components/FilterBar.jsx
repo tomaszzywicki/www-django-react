@@ -1,10 +1,16 @@
 /* eslint-disable react/prop-types */
 import { useRef, useState, useEffect } from "react";
-
 import "../styles/FilterBar.css";
 
-// eslint-disable-next-line react/prop-types
-const FilterBar = ({ categories, selectedCategories, onCategoryChange }) => {
+const FilterBar = ({
+  categories,
+  selectedCategories,
+  onCategoryChange,
+  sortBy,
+  onSortChange,
+  sortOrder,
+  onOrderChange,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -60,13 +66,15 @@ const FilterBar = ({ categories, selectedCategories, onCategoryChange }) => {
   return (
     <div className="filter-bar">
       <span>Sort by</span>
-      <select defaultValue={"Title"}>
+      <select value={sortBy} onChange={(e) => onSortChange(e.target.value)}>
         <option value="Title">Title</option>
         <option value="Author">Author</option>
         <option value="Category">Category</option>
+        <option value="Added">Added</option>
       </select>
+
       <span>Order</span>
-      <select defaultValue={"Ascending"}>
+      <select value={sortOrder} onChange={(e) => onOrderChange(e.target.value)}>
         <option value="Ascending">Ascending</option>
         <option value="Descending">Descending</option>
       </select>

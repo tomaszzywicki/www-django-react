@@ -1,11 +1,23 @@
 from rest_framework import serializers
-from .models import Book, BookCopy, Loan, User, BookCategory
+from .models import Book, BookCopy, Loan, User, BookCategory, Comment
 
-# Konwertuje modele Django na JSON i na odwrót
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookCategory
+        fields = ['id', 'name']
 
+class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True) 
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'user', 'text', 'created_at']
+
+# Serializer dla Book
 class BookSerializer(serializers.ModelSerializer):
     cover_image = serializers.SerializerMethodField()
     category = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Book
@@ -16,7 +28,9 @@ class BookSerializer(serializers.ModelSerializer):
             "description",
             "total_copies",
             "category",
+            "category_id",
             "cover_image",
+            "comments"
         ]
 
     def get_cover_image(self, obj):
@@ -25,7 +39,7 @@ class BookSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.cover_image.url)
         return None
 
-
+# Serializer dla BookCopy
 class BookCopySerializer(serializers.ModelSerializer):
     book = BookSerializer(read_only=True)
 
@@ -33,7 +47,7 @@ class BookCopySerializer(serializers.ModelSerializer):
         model = BookCopy
         fields = ["id", "book", "is_available"]
 
-
+# Serializer dla Loan
 class LoanSerializer(serializers.ModelSerializer):
     book = BookCopySerializer(read_only=True)
 
@@ -41,12 +55,11 @@ class LoanSerializer(serializers.ModelSerializer):
         model = Loan
         fields = ["id", "book", "loan_date", "return_due_date", "extensions"]
 
-
+# Serializer dla User
 class UserSerializer(serializers.ModelSerializer):
     loans = LoanSerializer(many=True, read_only=True)
     password = serializers.CharField(write_only=True, required=False, allow_blank=True)
     password2 = serializers.CharField(write_only=True, required=False, allow_blank=True, label="Confirm Password")
-    
 
     class Meta:
         model = User
@@ -92,8 +105,3 @@ class UserSerializer(serializers.ModelSerializer):
             if password != password2:
                 raise serializers.ValidationError({"password": "Passwords must match."})
         return attrs
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookCategory
-        fields = ['id', 'name']

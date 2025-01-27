@@ -5,16 +5,18 @@
   border-radius: 8px;
   font-family: Arial, sans-serif;
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* Zmiana na kolumnę, aby dodać komentarze poniżej */
   gap: 20px;
   background-color: #fafafa;
   padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .book-cover {
   max-width: 300px;
   border-radius: 6px;
   object-fit: cover;
+  align-self: center; /* Wyśrodkowanie obrazka */
 }
 
 .book-info {
@@ -55,10 +57,9 @@
   color: #555;
 }
 
-/* Responsiveness */
+/* Responsywność */
 @media (max-width: 768px) {
   .book-details {
-    flex-direction: column;
     align-items: center;
     padding: 15px;
   }
@@ -69,6 +70,18 @@
 
   .book-title {
     font-size: 1.5rem;
+  }
+
+  .book-author {
+    font-size: 1rem;
+  }
+
+  .book-description {
+    font-size: 0.95rem;
+  }
+
+  .book-category {
+    font-size: 0.9rem;
   }
 }
 
@@ -83,5 +96,17 @@
 
   .book-title {
     font-size: 1.3rem;
+  }
+
+  .book-author {
+    font-size: 0.9rem;
+  }
+
+  .book-description {
+    font-size: 0.85rem;
+  }
+
+  .book-category {
+    font-size: 0.8rem;
   }
 }

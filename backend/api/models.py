@@ -44,3 +44,12 @@ class Loan(models.Model):
     loan_date = models.DateTimeField(default=now)
     return_due_date = models.DateTimeField(default=calculate_return_date())
     extensions = models.PositiveIntegerField(default=0)
+
+class Comment(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    text = models.TextField()
+    created_at = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return f"{self.user.username} commented on {self.book.title}"
