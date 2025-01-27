@@ -61,7 +61,9 @@ function App() {
           <Route path="/register" element={<RegisterAndLogout />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
-        <Footer />
+        <div className="main-footer">
+          <Footer />
+        </div>
       </div>
     </BrowserRouter>
   );

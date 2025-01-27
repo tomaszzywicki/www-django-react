@@ -17,10 +17,13 @@ const Book = () => {
   const maxDescriptionLength = 600;
 
   useEffect(() => {
-    const token = localStorage.getItem(ACCESS_TOKEN);
-    if (token) {
-      setIsLoggedIn(true);
-    }
+    const checkUser = () => {
+      const token = localStorage.getItem(ACCESS_TOKEN);
+      if (token) {
+        setIsLoggedIn(true);
+      }
+    };
+    checkUser();
   }, []);
 
   useEffect(() => {

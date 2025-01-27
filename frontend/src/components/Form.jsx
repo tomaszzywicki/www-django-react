@@ -19,26 +19,32 @@ const Form = ({ route, method }) => {
 
   const validate = () => {
     const newErrors = {};
-    if (!username) newErrors.username = "Username is required.";
-    if (method !== "login") {
+
+    if (!username.trim()) {
+      newErrors.username = "Username is required";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    }
+
+    if (method === "register") {
       if (!email) {
-        newErrors.email = "Email is required.";
+        newErrors.email = "Email is required";
       } else {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-          newErrors.email = "Invalid email format.";
+          newErrors.email = "Invalid email format";
         }
       }
-    }
-    if (!password) newErrors.password = "Password is required.";
-    if (method === "register") {
-      // if (password.length < 6) {
-      //   newErrors.password = "Password must be at least 6 characters.";
-      // }
-      if (password !== confirmPassword) {
-        newErrors.confirmPassword = "Passwords do not match.";
+
+      if (!confirmPassword) {
+        newErrors.confirmPassword = "Please confirm your password";
+      } else if (password !== confirmPassword) {
+        newErrors.confirmPassword = "Passwords do not match";
       }
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -46,18 +52,33 @@ const Form = ({ route, method }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+
+    // Log validation state
+    console.log("Password:", password);
+    console.log("Confirm Password:", confirmPassword);
+
     if (!validate()) {
-      return;
+      return; // Don't reset form on validation failure
     }
+
     setLoading(true);
 
     try {
       const endpoint = route.endsWith("/") ? route : `${route}/`;
       const payload =
         method === "register"
-          ? { username, password, email }
+          ? {
+              username,
+              password,
+              password2: confirmPassword, // Add password confirmation to payload
+              email,
+            }
           : { username, password };
+
+      console.log("Sending payload:", payload); // Debug payload
+
       const res = await api.post(endpoint, payload);
+
       if (method === "login") {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
@@ -66,15 +87,22 @@ const Form = ({ route, method }) => {
         navigate("/login");
       }
     } catch (error) {
-      if (error.response && error.response.data) {
+      console.error("Registration error:", error.response?.data); // Debug error response
+
+      if (error.response?.data) {
         const backendErrors = error.response.data;
         const newErrors = {};
-        if (backendErrors.username) {
-          newErrors.username = backendErrors.username[0];
-        }
-        // jeszcze niby maile ale chuj bo one nie są w django user domyślnie unikalne
-        // a nie chcę robić custom usera
+
+        // Handle nested error messages
+        Object.keys(backendErrors).forEach((key) => {
+          newErrors[key] = Array.isArray(backendErrors[key])
+            ? backendErrors[key][0]
+            : backendErrors[key];
+        });
+
         setErrors(newErrors);
+      } else {
+        setErrors({ general: "Connection error. Please try again later." });
       }
     } finally {
       setLoading(false);
@@ -86,8 +114,11 @@ const Form = ({ route, method }) => {
       {name === "Login" ? (
         <form onSubmit={handleSubmit} className="form-container">
           <h1>{name}</h1>
+          {errors.general && (
+            <div className="error-general">{errors.general}</div>
+          )}
           <input
-            className="form-input"
+            className={`form-input ${errors.username ? "error-input" : ""}`}
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -95,7 +126,7 @@ const Form = ({ route, method }) => {
           />
           {errors.username && <span className="error">{errors.username}</span>}
           <input
-            className="form-input"
+            className={`form-input ${errors.password ? "error-input" : ""}`}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -104,14 +135,17 @@ const Form = ({ route, method }) => {
           {errors.password && <span className="error">{errors.password}</span>}
           {loading && <Loading />}
           <button className="form-button" type="submit" disabled={loading}>
-            {name}
+            {loading ? "Please wait..." : name}
           </button>
         </form>
       ) : (
         <form onSubmit={handleSubmit} className="form-container">
           <h1>{name}</h1>
+          {errors.general && (
+            <div className="error-general">{errors.general}</div>
+          )}
           <input
-            className="form-input"
+            className={`form-input ${errors.username ? "error-input" : ""}`}
             name="username"
             type="text"
             value={username}
@@ -120,7 +154,7 @@ const Form = ({ route, method }) => {
           />
           {errors.username && <span className="error">{errors.username}</span>}
           <input
-            className="form-input"
+            className={`form-input ${errors.email ? "error-input" : ""}`}
             name="email"
             type="email"
             value={email}
@@ -129,7 +163,7 @@ const Form = ({ route, method }) => {
           />
           {errors.email && <span className="error">{errors.email}</span>}
           <input
-            className="form-input"
+            className={`form-input ${errors.password ? "error-input" : ""}`}
             name="password"
             type="password"
             value={password}
@@ -138,7 +172,9 @@ const Form = ({ route, method }) => {
           />
           {errors.password && <span className="error">{errors.password}</span>}
           <input
-            className="form-input"
+            className={`form-input ${
+              errors.confirmPassword ? "error-input" : ""
+            }`}
             name="confirmPassword"
             type="password"
             value={confirmPassword}
@@ -150,7 +186,7 @@ const Form = ({ route, method }) => {
           )}
           {loading && <Loading />}
           <button className="form-button" type="submit" disabled={loading}>
-            {name}
+            {loading ? "Please wait..." : name}
           </button>
         </form>
       )}
