@@ -10,7 +10,7 @@
 ### 1. Sklonuj repozytorium
 ```bash
 git clone https://github.com/tomaszzywicki/www-django-react
-cd twoje-repo
+cd www-django-react
 
 ```
 ### 2. Backend (Django)
