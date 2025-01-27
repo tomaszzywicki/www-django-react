@@ -5,19 +5,28 @@ import api from "../api";
 
 import "../styles/Book.css";
 import CommentsSection from "./CommentsSection";
+import { ACCESS_TOKEN } from "../constants";
 
 const Book = () => {
   const { id } = useParams();
   const [book, setBook] = useState(null);
-  const [isExpanded, setIsExpanded] = useState(false); // Dodany stan
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [orderStatus, setOrderStatus] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const maxDescriptionLength = 600;
+
+  useEffect(() => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchBook = async () => {
       try {
         const res = await api.get(`/api/book/${id}`);
-        console.log(res.data);
         setBook(res.data);
       } catch (error) {
         console.log("Error when fetching book data: ", error);
@@ -27,6 +36,17 @@ const Book = () => {
   }, [id]);
 
   if (!book) return <div className="book-loading">Loading...</div>;
+
+  const handleOrder = async () => {
+    try {
+      await api.post(`/api/book/${id}/order/`);
+      setOrderStatus("success");
+      setBook({ ...book, available_copies: book.available_copies - 1 });
+    } catch (error) {
+      setOrderStatus("error");
+      console.error("Error ordering book:", error);
+    }
+  };
 
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
@@ -67,6 +87,22 @@ const Book = () => {
           <h3 className="book-author">Autor: {book.author}</h3>
           {renderDescription()}
           <p className="book-category">Kategoria: {book.category}</p>
+          <div className="order-section">
+            <p className="available-copies">
+              Dostępne egzemplarze: {book.available_copies}
+            </p>
+            {isLoggedIn && book.available_copies > 0 && (
+              <button className="order-button" onClick={handleOrder}>
+                Zamów książkę
+              </button>
+            )}
+            {orderStatus === "success" && (
+              <p className="order-success">Zamówienie złożone pomyślnie!</p>
+            )}
+            {orderStatus === "error" && (
+              <p className="order-error">Wystąpił błąd podczas zamawiania.</p>
+            )}
+          </div>
         </div>
       </div>
       <div className="comments-section">

@@ -70,6 +70,43 @@
   border: none;
 }
 
+.order-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.available-copies {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.order-button {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.order-button:hover {
+  background-color: #218838;
+}
+
+.order-success {
+  color: #28a745;
+  margin-top: 10px;
+}
+
+.order-error {
+  color: #dc3545;
+  margin-top: 10px;
+}
+
 .read-more {
   color: #007bff;
   cursor: pointer;

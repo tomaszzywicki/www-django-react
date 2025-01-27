@@ -17,33 +17,24 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     description = models.TextField()
-    total_copies = models.IntegerField()
+    available_copies = models.IntegerField()
     category = models.ForeignKey(
         BookCategory, on_delete=models.SET_NULL, null=True, related_name="books"
     )
     cover_image = models.ImageField(upload_to="covers/", null=True, blank=True)
 
     def __str__(self):
-        return f"{self.title}, {self.total_copies} copies"
+        return f"{self.title}, {self.available_copies} copies"
 
 
-class BookCopy(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="copies")
-    is_available = models.BooleanField(default=True)
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    order_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='pending')
 
-    def __str__(self):
-        return f"Copy of {self.book.title} (Available: {self.is_available})"
-
-
-class Loan(models.Model):
-    def calculate_return_date(days=30):
-        return now() + timedelta(days)
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="loans")
-    book = models.ForeignKey(BookCopy, on_delete=models.CASCADE, related_name="loans")
-    loan_date = models.DateTimeField(default=now)
-    return_due_date = models.DateTimeField(default=calculate_return_date())
-    extensions = models.PositiveIntegerField(default=0)
+    class Meta:
+        ordering = ['-order_date']
 
 class Comment(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="comments")

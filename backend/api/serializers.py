@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book, BookCopy, Loan, User, BookCategory, Comment
+from .models import Book  , User, BookCategory, Comment, Order
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,7 +26,7 @@ class BookSerializer(serializers.ModelSerializer):
             "title",
             "author",
             "description",
-            "total_copies",
+            "available_copies",
             "category",
             "category_id",
             "cover_image",
@@ -34,30 +34,15 @@ class BookSerializer(serializers.ModelSerializer):
         ]
 
     def get_cover_image(self, obj):
-        request = self.context.get("request")
-        if obj.cover_image and hasattr(obj.cover_image, "url"):
+        request = self.context.get('request')
+        if obj.cover_image and request is not None:
             return request.build_absolute_uri(obj.cover_image.url)
-        return None
+        return None  
 
-# Serializer dla BookCopy
-class BookCopySerializer(serializers.ModelSerializer):
-    book = BookSerializer(read_only=True)
 
-    class Meta:
-        model = BookCopy
-        fields = ["id", "book", "is_available"]
-
-# Serializer dla Loan
-class LoanSerializer(serializers.ModelSerializer):
-    book = BookCopySerializer(read_only=True)
-
-    class Meta:
-        model = Loan
-        fields = ["id", "book", "loan_date", "return_due_date", "extensions"]
 
 # Serializer dla User
 class UserSerializer(serializers.ModelSerializer):
-    loans = LoanSerializer(many=True, read_only=True)
     password = serializers.CharField(write_only=True, required=False, allow_blank=True)
     password2 = serializers.CharField(write_only=True, required=False, allow_blank=True, label="Confirm Password")
 
@@ -71,7 +56,6 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "password2",
             "email",
-            "loans",
         ]
         extra_kwargs = {"password": {"write_only": True, "required": False}}
 
@@ -105,3 +89,10 @@ class UserSerializer(serializers.ModelSerializer):
             if password != password2:
                 raise serializers.ValidationError({"password": "Passwords must match."})
         return attrs
+
+class OrderSerializer(serializers.ModelSerializer):
+    book = BookSerializer(read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'book', 'order_date', 'status']

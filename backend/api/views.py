@@ -2,11 +2,12 @@ from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import User, Book, BookCategory, Comment
-from .serializers import UserSerializer, BookSerializer, CategorySerializer, CommentSerializer
+from .models import User, Book, BookCategory, Comment, Order
+from .serializers import UserSerializer, BookSerializer, CategorySerializer, CommentSerializer, OrderSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import BookFilter
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -69,3 +70,24 @@ class CommentDeleteAPIView(generics.DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated, IsAuthorOrReadOnly]
+
+
+class OrderCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, book_id):
+        book = get_object_or_404(Book, id=book_id)
+        if book.available_copies > 0:
+            Order.objects.create(user=request.user, book=book)
+            book.available_copies -= 1
+            book.save()
+            return Response({'status': 'success'})
+        return Response({'error': 'No copies available'}, status=400)
+
+class UserOrdersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        orders = Order.objects.filter(user=request.user)
+        serializer = OrderSerializer(orders, many=True, context={'request': request})
+        return Response(serializer.data)
