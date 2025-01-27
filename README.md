@@ -9,7 +9,7 @@
 
 ### 1. Sklonuj repozytorium
 ```bash
-git clone https://github.com/TwojProfil/twoje-repo.git
+git clone https://github.com/tomaszzywicki/www-django-react
 cd twoje-repo
 
 ```
